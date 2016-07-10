@@ -18,8 +18,8 @@
 <resources>
 
     <!-- App -->
-    <string name="app_name">SlimOTA</string>
-    <string name="app_title">SlimOTA</string>
+    <string name="app_name">CardinalOTA</string>
+    <string name="app_title">CardinalOTS</string>
 
     <!-- Categories -->
     <string name="ota_category">OTA</string>
@@ -43,8 +43,8 @@
     <string name="autoupdate_disabled">Automatic update is disabled</string>
 
     <!-- Notification -->
-    <string name="notification_title">ROM Update</string>
-    <string name="notification_message">New update available!</string>
+    <string name="notification_title">Cardinal-AOSP Update</string>
+    <string name="notification_message">New update for your device is up!</string>
 
     <!-- Dialog -->
     <string name="dialog_message">Checking for ROM updates, please wait…</string>

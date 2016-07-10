@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CardinalOTA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ota.xsd">
+    <Stable>
+        <kenzo>
+            <Filename>Cardinal-AOSP-5.0-STAGING-OREO-kenzo-OFFICIAL-20170917.zip</Filename>
+            <RomUrl
+                id="rom"
+                title="ROM"
+                description="Latest Cardinal-AOSP build">https://drive.google.com/open?id=0B7MdBmXfQKGTZVotel9qQUJCbWc</RomUrl>
+            <OpenGappsUrl
+                id="gapps"
+                title="GApps"
+                description="Download latest GApps">https://opengapps.org</BeansGappsUrl>
+	        <ChangelogUrl
+                id="changelog"
+                title="Changelog"
+                description="View Changelog">https://github.com/Cardinal-AOSP/BirdHouse/raw/oreo/Changelog.txt</ChangelogUrl>
+        </kenzo>
+    </Stable>
+</CardinalOTA>
