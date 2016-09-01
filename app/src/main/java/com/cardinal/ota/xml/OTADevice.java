@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.citrus.citrusota.xml;
+package com.cardinal.ota.xml;
 
 import java.util.ArrayList;
 import java.util.List;

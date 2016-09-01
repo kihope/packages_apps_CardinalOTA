@@ -1,4 +1,4 @@
-package com.citrus.citrusota;
+package com.cardinal.ota;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

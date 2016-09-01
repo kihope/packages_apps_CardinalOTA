@@ -16,4 +16,4 @@
 #   public *;
 #}
 
--keep class com.citrus.citrusota.core.OTAListener
+-keep class com.cardinal.ota.core.OTAListener

@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.citrus.citrusota.scheduler;
+package com.cardinal.ota.scheduler;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
-import com.citrus.citrusota.tasks.CheckUpdateTask;
+import com.cardinal.ota.tasks.CheckUpdateTask;
 
 public class OTAService extends WakefulIntentService {
 
     public OTAService() {
-        super("CitrusOTA");
+        super("CardinalOTA");
     }
 
     @Override

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.citrus.citrusota.fragments;
+package com.cardinal.ota.fragments;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -25,18 +25,18 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 
-import com.citrus.citrusota.R;
-import com.citrus.citrusota.configs.AppConfig;
-import com.citrus.citrusota.configs.LinkConfig;
-import com.citrus.citrusota.configs.OTAVersion;
-import com.citrus.citrusota.dialogs.WaitDialogFragment;
-import com.citrus.citrusota.tasks.CheckUpdateTask;
-import com.citrus.citrusota.utils.OTAUtils;
-import com.citrus.citrusota.xml.OTALink;
+import com.cardinal.ota.R;
+import com.cardinal.ota.configs.AppConfig;
+import com.cardinal.ota.configs.LinkConfig;
+import com.cardinal.ota.configs.OTAVersion;
+import com.cardinal.ota.dialogs.WaitDialogFragment;
+import com.cardinal.ota.tasks.CheckUpdateTask;
+import com.cardinal.ota.utils.OTAUtils;
+import com.cardinal.ota.xml.OTALink;
 
 import java.util.List;
 
-public class CitrusOTAFragment extends PreferenceFragment implements
+public class CardinalOTAFragment extends PreferenceFragment implements
         Preference.OnPreferenceChangeListener,
         SharedPreferences.OnSharedPreferenceChangeListener ,
         WaitDialogFragment.OTADialogListener,
@@ -59,7 +59,7 @@ public class CitrusOTAFragment extends PreferenceFragment implements
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        addPreferencesFromResource(R.xml.citrusota);
+        addPreferencesFromResource(R.xml.cardinalota);
 
         mRomInfo = (PreferenceScreen) getPreferenceScreen().findPreference(KEY_ROM_INFO);
         mCheckUpdate = (PreferenceScreen) getPreferenceScreen().findPreference(KEY_CHECK_UPDATE);

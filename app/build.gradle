@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.citrus.citrusota"
+        applicationId "com.cardinal.ota"
         minSdkVersion 21
         targetSdkVersion 22
         versionCode 4

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.citrus.citrusota.configs;
+package com.cardinal.ota.configs;
 
 import android.content.Context;
 
-import com.citrus.citrusota.xml.OTALink;
-import com.citrus.citrusota.xml.OTAParser;
-import com.citrus.citrusota.utils.OTAUtils;
+import com.cardinal.ota.xml.OTALink;
+import com.cardinal.ota.xml.OTAParser;
+import com.cardinal.ota.utils.OTAUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

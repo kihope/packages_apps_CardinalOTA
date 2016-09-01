@@ -18,8 +18,8 @@
 <resources>
 
     <!-- App -->
-    <string name="app_name">CitrusOTA</string>
-    <string name="app_title">CitrusOTA</string>
+    <string name="app_name">CardinalOTA</string>
+    <string name="app_title">CardinalOTS</string>
 
     <!-- Categories -->
     <string name="ota_category">OTA</string>
@@ -43,7 +43,7 @@
     <string name="autoupdate_disabled">Automatic update is disabled</string>
 
     <!-- Notification -->
-    <string name="notification_title">Citrus-CAF Update</string>
+    <string name="notification_title">Cardinal-AOSP Update</string>
     <string name="notification_message">New update for your device is up!</string>
 
     <!-- Dialog -->

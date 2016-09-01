@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-package com.citrus.citrusota;
+package com.cardinal.ota;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
-import com.citrus.citrusota.configs.LinkConfig;
-import com.citrus.citrusota.dialogs.WaitDialogFragment;
-import com.citrus.citrusota.fragments.CitrusOTAFragment;
+import com.cardinal.ota.configs.LinkConfig;
+import com.cardinal.ota.dialogs.WaitDialogFragment;
+import com.cardinal.ota.fragments.CardinalOTAFragment;
 
 public class MainActivity extends PreferenceActivity implements
         WaitDialogFragment.OTADialogListener, LinkConfig.LinkConfigListener {
 
-    private static final String FRAGMENT_TAG = CitrusOTAFragment.class.getName();
-    private CitrusOTAFragment mFragment;
+    private static final String FRAGMENT_TAG = CardinalOTAFragment.class.getName();
+    private CardinalOTAFragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mFragment = (CitrusOTAFragment) getFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+        mFragment = (CardinalOTAFragment) getFragmentManager().findFragmentByTag(FRAGMENT_TAG);
         if (mFragment == null) {
             getFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new CitrusOTAFragment(), FRAGMENT_TAG)
+                    .replace(android.R.id.content, new CardinalOTAFragment(), FRAGMENT_TAG)
                     .commit();
         }
 

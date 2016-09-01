@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.citrus.citrusota.configs;
+package com.cardinal.ota.configs;
 
 import android.app.AlarmManager;
 import android.content.Context;
@@ -22,9 +22,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
-import com.citrus.citrusota.R;
-import com.citrus.citrusota.scheduler.OTAListener;
-import com.citrus.citrusota.utils.OTAUtils;
+import com.cardinal.ota.R;
+import com.cardinal.ota.scheduler.OTAListener;
+import com.cardinal.ota.utils.OTAUtils;
 
 import java.text.DateFormat;
 import java.util.Date;

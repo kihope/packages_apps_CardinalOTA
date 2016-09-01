@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.citrus.citrusota.dialogs;
+package com.cardinal.ota.dialogs;
 
 import android.app.Activity;
 import android.app.Fragment;
