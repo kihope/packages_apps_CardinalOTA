@@ -7,7 +7,7 @@
 # * Multiple devices can be added in the xml file
 # * You can define any tags that end with 'Url'. These tags will be added in the UI automatically
 #
-ota_url=https://github.com/BirdSanctuary/CardinalOTA/raw/oreo/ota_oreo.xml
+ota_url=https://github.com/BirdSanctuary/OTA/raw/oreo/ota_oreo.xml
 release_type=Stable
 device_name=ro.cardinal.device
  
