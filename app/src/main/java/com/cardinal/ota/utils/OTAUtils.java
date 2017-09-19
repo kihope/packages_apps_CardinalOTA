@@ -39,8 +39,6 @@ public final class OTAUtils {
     private static final String TAG = "CardinalOTA";
     private static final boolean DEBUG = true;
 
-    private static final String BUILD_PROP = "/system/build.prop";
-
     private OTAUtils() {
     }
 
@@ -68,18 +66,22 @@ public final class OTAUtils {
         return OTAUtils.getBuildProp(propName);
     }
 
-    public static String getBuildProp(String propertyName) {
-        Properties buildProps = new Properties();
-        try {
-            FileInputStream is = new FileInputStream(new File(BUILD_PROP));
-            buildProps.load(is);
-            is.close();
-            return buildProps.getProperty(propertyName, "");
-        } catch (IOException e) {
-            logError(e);
-        }
-        return "";
-    }
+	public static String getBuildProp(String propertyName) {
+		Process p = null;
+		String result = "";
+		try {
+			p = new ProcessBuilder("/system/bin/getprop", propertyName).redirectErrorStream(true).start();
+			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			String line = "";
+			while ((line=br.readLine()) != null) {
+				result = line;
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
     public static String runCommand(String command) {
         try {
