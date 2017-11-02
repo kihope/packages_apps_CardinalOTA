@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Cardinal OTA</string>
+    <string name="check_update_title">Check for Updates</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="menu_open_browser">Open in Browser</string>
+    <string name="menu_copy_link">Copy link</string>
+</resources>

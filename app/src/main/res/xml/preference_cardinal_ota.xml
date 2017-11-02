@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/app_name">
+
+    <Preference
+        android:key="rom_info"
+        android:layout="@layout/preference_material_settings" />
+
+    <Preference
+        android:key="check_update"
+        android:layout="@layout/preference_material_settings"
+        android:title="@string/check_update_title" />
+
+    <Preference
+        android:key="update_link"
+        android:layout="@layout/preference_material_settings" />
+
+</PreferenceScreen>
