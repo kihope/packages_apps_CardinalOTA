@@ -1,4 +1,4 @@
-package com.cardinal.cardinalota;
+package com.cardinal.ota;
 
 class Constants {
     final static String LOG_TAG = "Cardinal OTA";

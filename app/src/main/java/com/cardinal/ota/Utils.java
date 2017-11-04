@@ -1,4 +1,4 @@
-package com.cardinal.cardinalota;
+package com.cardinal.ota;
 
 import android.util.Log;
 

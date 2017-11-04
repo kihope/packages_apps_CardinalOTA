@@ -1,4 +1,4 @@
-package com.cardinal.cardinalota;
+package com.cardinal.ota;
 
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -34,11 +34,11 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.cardinal.cardinalota.Utils.compareDate;
-import static com.cardinal.cardinalota.Utils.getCurBuildDate;
-import static com.cardinal.cardinalota.Utils.getProp;
+import static com.cardinal.ota.Utils.compareDate;
+import static com.cardinal.ota.Utils.getCurBuildDate;
+import static com.cardinal.ota.Utils.getProp;
 
-public class CardinalOTAActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener,
+public class MainActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener,
         SharedPreferences.OnSharedPreferenceChangeListener, FetchTask.AsyncResponse {
 
     public String device, name, currentVer;
@@ -62,7 +62,7 @@ public class CardinalOTAActivity extends PreferenceActivity implements Preferenc
         lv.setDivider(new ColorDrawable(Color.TRANSPARENT));
         lv.setDividerHeight(0);
 
-        dialog = ProgressDialog.show(CardinalOTAActivity.this, "", "Checking...", true);
+        dialog = ProgressDialog.show(MainActivity.this, "", getString(R.string.ota_dialog_message), true);
 
         addPreferencesFromResource(R.xml.preference_cardinal_ota);
         mRomInfo = (Preference) getPreferenceScreen().findPreference(KEY_ROM_INFO);
@@ -94,7 +94,7 @@ public class CardinalOTAActivity extends PreferenceActivity implements Preferenc
             editor.putString("datetime", currentDateTimeString);
             editor.commit();
             currentVer = getProp(Constants.BUILD_FLAVOR_PROP);
-            mRomInfo.setSummary("Your system is up-to-date.");
+            mRomInfo.setSummary(R.string.ota_upto_date);
             updatePreferences();
         } else updatePreferences();
     }
@@ -138,12 +138,12 @@ public class CardinalOTAActivity extends PreferenceActivity implements Preferenc
         if (isConnected()) {
             SharedPreferences lastCheckPref = getApplicationContext().getSharedPreferences("lastCheckDate", 0);
             if (!lastCheckPref.getString("datetime", null).equalsIgnoreCase(""))
-                mCheckUpdate.setSummary("Last Checked: " + lastCheckPref.getString("datetime", null));
+                mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + lastCheckPref.getString("datetime", null));
             else
-                mCheckUpdate.setSummary("Last Checked: " + DateFormat.getDateTimeInstance().format(new Date()));
+                mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
         } else {
-            mCheckUpdate.setSummary("Network Error");
-            mRomInfo.setSummary("Your system is up-to-date.");
+            mCheckUpdate.setSummary(R.string.ota_network_error);
+            mRomInfo.setSummary(R.string.ota_upto_date);
         }
     }
 
@@ -182,8 +182,8 @@ public class CardinalOTAActivity extends PreferenceActivity implements Preferenc
             if ((isConnected()) && (!output.equalsIgnoreCase(""))) {
                 if (compareDate(date, getCurBuildDate(currentVer))) {
                     Log.i(Constants.LOG_TAG, "Not up-to-date");
-                    mCheckUpdate.setSummary("Last Checked: " + DateFormat.getDateTimeInstance().format(new Date()));
-                    mRomInfo.setSummary("Latest build is available for update.");
+                    mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
+                    mRomInfo.setSummary(R.string.ota_update_available);
                     mUpdateLink = (Preference) getPreferenceScreen().findPreference(KEY_UPDATE_LINK);
 
                     final Uri uri = Uri.parse(Constants.SF_PROJECTS_DOWNLOAD_BASE_URL)
@@ -209,8 +209,8 @@ public class CardinalOTAActivity extends PreferenceActivity implements Preferenc
                     });
 
                     mUpdateLink.setIcon(R.drawable.ic_ota_download);
-                    mUpdateLink.setTitle("Download");
-                    mUpdateLink.setSummary("Long Press for more options.");
+                    mUpdateLink.setTitle(R.string.ota_download_title);
+                    mUpdateLink.setSummary(R.string.ota_download_summary);
                     mUpdateLink.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
@@ -230,15 +230,15 @@ public class CardinalOTAActivity extends PreferenceActivity implements Preferenc
                     });
                 } else {
                     Log.i(Constants.LOG_TAG, "Up-to-date");
-                    mRomInfo.setSummary("Your system is up-to-date.");
-                    mCheckUpdate.setSummary("Last Checked: " + DateFormat.getDateTimeInstance().format(new Date()));
+                    mRomInfo.setSummary(R.string.ota_upto_date);
+                    mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
                 }
             }
         } else {
-            Toast.makeText(CardinalOTAActivity.this, "Null", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Null", Toast.LENGTH_LONG).show();
             Log.i(Constants.LOG_TAG, "Up-to-date");
-            mRomInfo.setSummary("Your system is up-to-date.");
-            mCheckUpdate.setSummary("Last Checked: " + DateFormat.getDateTimeInstance().format(new Date()));
+            mRomInfo.setSummary(R.string.ota_upto_date);
+            mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
         }
     }
 

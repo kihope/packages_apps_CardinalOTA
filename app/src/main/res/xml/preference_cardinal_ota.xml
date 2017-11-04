@@ -4,6 +4,7 @@
 
     <Preference
         android:key="rom_info"
+        android:singleLineTitle="false"
         android:layout="@layout/preference_material_settings" />
 
     <Preference

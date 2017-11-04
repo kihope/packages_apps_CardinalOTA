@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "com.cardinal.cardinalota"
+        applicationId "com.cardinal.ota"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
@@ -33,5 +33,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:design:26.1.0'
-    implementation 'eu.chainfire:libsuperuser:1.0.0+'
 }

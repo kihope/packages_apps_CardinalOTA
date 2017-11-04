@@ -1,4 +1,4 @@
-package com.cardinal.cardinalota;
+package com.cardinal.ota;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,8 +15,8 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.cardinal.cardinalota.Utils.compareDate;
-import static com.cardinal.cardinalota.Utils.getProp;
+import static com.cardinal.ota.Utils.compareDate;
+import static com.cardinal.ota.Utils.getProp;
 
 public class FetchTask extends AsyncTask<String, Void, ArrayList<String>> {
 
@@ -140,4 +140,3 @@ public class FetchTask extends AsyncTask<String, Void, ArrayList<String>> {
     }
 
 }
-

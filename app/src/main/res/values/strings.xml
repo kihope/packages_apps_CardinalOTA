@@ -1,7 +1,15 @@
 <resources>
     <string name="app_name">Cardinal OTA</string>
-    <string name="check_update_title">Check for Updates</string>
+    <string name="check_update_title">Check for updates</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="menu_open_browser">Open in Browser</string>
+    <string name="menu_open_browser">Open in browser</string>
     <string name="menu_copy_link">Copy link</string>
+    <string name="ota_dialog_message">Checking for updates...</string>
+    <string name="ota_upto_date">Your system is up-to-date</string>
+    <string name="ota_last_checked">Last checked:</string>
+    <string name="ota_network_error">Network error</string>
+    <string name="ota_update_available">Latest build is available for update</string>
+    <string name="ota_download_title">Download</string>
+    <string name="ota_download_summary">Long Press for more options</string>
+
 </resources>
