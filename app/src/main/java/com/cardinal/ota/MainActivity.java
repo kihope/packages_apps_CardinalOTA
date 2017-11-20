@@ -56,7 +56,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(false);
 
         ListView lv = getListView();
         lv.setDivider(new ColorDrawable(Color.TRANSPARENT));
