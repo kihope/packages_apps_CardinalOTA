@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 
 import static com.cardinal.ota.Utils.compareDate;
 import static com.cardinal.ota.Utils.getProp;
+import static com.cardinal.ota.Utils.isValidDate;
 
 public class FetchTask extends AsyncTask<String, Void, ArrayList<String>> {
 
@@ -87,27 +88,14 @@ public class FetchTask extends AsyncTask<String, Void, ArrayList<String>> {
             String[] builds = result.toArray(new String[result.size()]);
             Log.i(Constants.LOG_TAG, "Size: " + result.size());
             for (String build : builds) {
-                Log.i(Constants.LOG_TAG, "foreach");
                 Log.i(Constants.LOG_TAG, "Build: " + build);
                 StringTokenizer st = new StringTokenizer(build, Constants.ROM_ZIP_DELIMITER);
                 while (st.hasMoreTokens()) {
-                    Log.i(Constants.LOG_TAG, "while");
-                    switch (location) {
-                        case Constants.ROM_ZIP_DATE_LOCATION: {
-                            try {
-                                date = Integer.parseInt(st.nextToken());
-                                Log.i(Constants.LOG_TAG, "Date: " + date);
-                            } catch (NumberFormatException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        break;
-                        default:
-                            Log.i(Constants.LOG_TAG, "Default: " + st.nextToken());
-                            break;
+                    String value = st.nextToken();
+                    if (isValidDate(value)) {
+                        date = Integer.parseInt(value);
+                        //Log.e(Constants.LOG_TAG, value);
                     }
-
-                    Log.i(Constants.LOG_TAG, "Location: " + location);
                     location++;
 
                     if (date == 0)
