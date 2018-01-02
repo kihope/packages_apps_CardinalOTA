@@ -4,7 +4,6 @@ import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -67,8 +66,8 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         addPreferencesFromResource(R.xml.preference_cardinal_ota);
         mRomInfo = (Preference) getPreferenceScreen().findPreference(KEY_ROM_INFO);
         mCheckUpdate = (Preference) getPreferenceScreen().findPreference(KEY_CHECK_UPDATE);
-        mRomInfo.setIcon(R.drawable.ic_ota_info);
-        mCheckUpdate.setIcon(R.drawable.ic_ota_refresh);
+        mRomInfo.setIcon(getResources().getDrawable(R.drawable.ic_ota_info));
+        mCheckUpdate.setIcon(getResources().getDrawable(R.drawable.ic_ota_refresh));
 
 
         mCheckUpdate.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -208,7 +207,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                         }
                     });
 
-                    mUpdateLink.setIcon(R.drawable.ic_ota_download);
+                    mUpdateLink.setIcon(getResources().getDrawable(R.drawable.ic_ota_download));
                     mUpdateLink.setTitle(R.string.ota_download_title);
                     mUpdateLink.setSummary(R.string.ota_download_summary);
                     mUpdateLink.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
