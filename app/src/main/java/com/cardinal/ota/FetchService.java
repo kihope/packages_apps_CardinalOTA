@@ -1,11 +1,19 @@
 package com.cardinal.ota;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -21,16 +29,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.cardinal.ota.Utils.compareDate;
+import static com.cardinal.ota.Utils.getCurBuildDate;
 import static com.cardinal.ota.Utils.getProp;
 import static com.cardinal.ota.Utils.isValidDate;
 
-public class FetchService extends Service{
+public class FetchService extends Service {
 
     public String device;
+    private String LOG_TAG = FetchService.class.getSimpleName();
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i(LOG_TAG, "Fetch Service Start");
         String checkDevice = getProp(Constants.ROM_DEVICE_PROP);
         if (!checkDevice.equalsIgnoreCase("")) device = checkDevice;
         Uri ctrBaseUrl = Uri.parse(Constants.SF_PROJECTS_BASE_URL)
@@ -39,19 +50,28 @@ public class FetchService extends Service{
                 .appendPath("files")
                 .appendPath(device)
                 .build();
-        new FetchTask().execute(ctrBaseUrl.toString());
+        if (isConnected())
+            new FetchTask().execute(ctrBaseUrl.toString());
     }
 
     @Nullable
     @Override
-    public IBinder onBind(Intent intent) {return null;
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    public boolean isConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        Log.i(LOG_TAG, "isConnected: " + Boolean.toString(netInfo != null && netInfo.isConnectedOrConnecting()));
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     private class FetchTask extends AsyncTask<String, Void, ArrayList<String>> {
 
         @Override
         protected void onPreExecute() {
-
         }
 
         @Override
@@ -101,20 +121,19 @@ public class FetchService extends Service{
             super.onPostExecute(result);
 
             if (result != null && !result.isEmpty()) {
-                int date = 0, maxDate = 0, location = 1;
+                int date = 0, maxDate = 0;
                 String newestRom = "";
                 String[] builds = result.toArray(new String[result.size()]);
-                Log.i(Constants.LOG_TAG, "Size: " + result.size());
+                Log.i(LOG_TAG, "Size: " + result.size());
                 for (String build : builds) {
-                    Log.i(Constants.LOG_TAG, "Build: " + build);
+                    Log.i(LOG_TAG, "Build: " + build);
                     StringTokenizer st = new StringTokenizer(build, Constants.ROM_ZIP_DELIMITER);
                     while (st.hasMoreTokens()) {
                         String value = st.nextToken();
                         if (isValidDate(value)) {
                             date = Integer.parseInt(value);
-                            //Log.e(Constants.LOG_TAG, value);
+                            //Log.e(LOG_TAG, value);
                         }
-                        location++;
 
                         if (date == 0)
                             continue;
@@ -132,29 +151,56 @@ public class FetchService extends Service{
                             break;
                         }
                     }
-                    location = 1;
                 }
 
-                Log.i("LOG", "this shit from service");
-                Log.i(Constants.LOG_TAG, "Update: " + newestRom);
-                Log.i(Constants.LOG_TAG, "Update Build Date: " + Integer.toString(maxDate));
-                Log.i("LOG", "this shit from service");
-                Log.i("LOG", "service stop");
+                Log.i(LOG_TAG, "Update: " + newestRom);
+                Log.i(LOG_TAG, "Update Build Date: " + Integer.toString(maxDate));
 
-                //if (!newestRom.equals("")) delegate.processFinish(newestRom, maxDate);
                 Intent intent = new Intent("ROMUpdates");
                 intent.putExtra("Update", newestRom);
                 intent.putExtra("BuildDate", Integer.toString(maxDate));
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.cancelAll();
+                if (!newestRom.equalsIgnoreCase(null) && maxDate != 0) {
+                    String currentVer = getProp(Constants.BUILD_FLAVOR_PROP);
+                    if ((isConnected()) && (!newestRom.equalsIgnoreCase(""))) {
+                        if (compareDate(maxDate, getCurBuildDate(currentVer))) {
+                            Log.i(LOG_TAG, "Not up-to-date");
+
+                            String id = "id";
+                            CharSequence name = "Cardinal-AOSP";
+                            String description = "Notifications regarding Cardinal-AOSP updates";
+                            int importance = NotificationManager.IMPORTANCE_HIGH;
+                            NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+                            mChannel.setDescription(description);
+                            mChannel.enableLights(true);
+                            mChannel.setLightColor(Color.WHITE);
+                            notificationManager.createNotificationChannel(mChannel);
+                            Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
+                            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 123, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+                            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), "id")
+                                    .setSmallIcon(R.mipmap.ic_launcher_ota)
+                                    .setBadgeIconType(R.mipmap.ic_launcher_ota)
+                                    .setContentTitle("Cardinal-AOSP Update Available")
+                                    .setAutoCancel(true).setContentIntent(pendingIntent)
+                                    .setNumber(1)
+                                    .setColor(255)
+                                    .setContentText("Tap here to open OTA app")
+                                    .setWhen(System.currentTimeMillis());
+                            notificationManager.notify(1, notificationBuilder.build());
+                        }
+                    }
+                }
             } else {
-                Log.e(Constants.LOG_TAG, "Null error");
-                //delegate.processFinish("", 0);
+                Log.e(LOG_TAG, "Null error");
                 Intent intent = new Intent("ROMUpdates");
                 intent.putExtra("Update", "");
                 intent.putExtra("BuildDate", "0");
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             }
         }
+
 
     }
 

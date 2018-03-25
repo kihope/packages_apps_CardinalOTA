@@ -54,6 +54,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
     private ProgressDialog dialog;
     private static final int PERMISSION_REQUEST_CODE = 200;
     private String downUri;
+    private String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,10 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         mRomInfo.setIcon(R.drawable.ic_ota_info);
         mCheckUpdate.setIcon(R.drawable.ic_ota_refresh);
 
+        mUpdateLink = (Preference) getPreferenceScreen().findPreference(KEY_UPDATE_LINK);
+        mUpdateLink.setIcon(R.drawable.ic_ota_download);
+        mUpdateLink.setTitle(R.string.ota_download_title);
+        mUpdateLink.setSummary(R.string.ota_download_summary);
 
         mCheckUpdate.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -132,7 +137,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        Log.i(Constants.LOG_TAG, "isConnected: " + Boolean.toString(netInfo != null && netInfo.isConnectedOrConnecting()));
+        Log.i(LOG_TAG, "isConnected: " + Boolean.toString(netInfo != null && netInfo.isConnectedOrConnecting()));
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
@@ -160,9 +165,8 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                 .appendPath("files")
                 .appendPath(device)
                 .build();
-        Log.i(Constants.LOG_TAG, ctrBaseUrl.toString());
+        Log.i(LOG_TAG, ctrBaseUrl.toString());
         dialog.show();
-        Intent intent = new Intent(this, FetchService.class);
         startService(new Intent(this, FetchService.class));
 
     }
@@ -181,6 +185,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         @Override
         public void onReceive(Context context, Intent intent) {
             dialog.dismiss();
+            stopService(new Intent(getApplicationContext(), FetchService.class));
             String output; int date;
             output = intent.getStringExtra("Update");
             date = Integer.parseInt(intent.getStringExtra("BuildDate"));
@@ -189,10 +194,10 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                 currentVer = getProp(Constants.BUILD_FLAVOR_PROP);
                 if ((isConnected()) && (!output.equalsIgnoreCase(""))) {
                     if (compareDate(date, getCurBuildDate(currentVer))) {
-                        Log.i(Constants.LOG_TAG, "Not up-to-date");
+                        Log.i(LOG_TAG, "Not up-to-date");
                         mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
                         mRomInfo.setSummary(R.string.ota_update_available);
-                        mUpdateLink = (Preference) getPreferenceScreen().findPreference(KEY_UPDATE_LINK);
+                        getPreferenceScreen().findPreference(KEY_UPDATE_LINK).setEnabled(true);
 
                         final Uri uri = Uri.parse(Constants.SF_PROJECTS_DOWNLOAD_BASE_URL)
                                 .buildUpon()
@@ -206,7 +211,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                             @Override
                             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                                Log.i(Constants.LOG_TAG, Long.toString(id));
+                                Log.i(LOG_TAG, Long.toString(id));
                                 switch ((int) id) {
                                     case 3:
                                         registerForContextMenu(lv);
@@ -216,13 +221,9 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                             }
                         });
 
-                        mUpdateLink.setIcon(R.drawable.ic_ota_download);
-                        mUpdateLink.setTitle(R.string.ota_download_title);
-                        mUpdateLink.setSummary(R.string.ota_download_summary);
                         mUpdateLink.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                             @Override
                             public boolean onPreferenceClick(Preference preference) {
-
                                 DownloadManager.Request r = new DownloadManager.Request(uri);
                                 r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name);
                                 r.allowScanningByMediaScanner();
@@ -237,16 +238,25 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                             }
                         });
                     } else {
-                        Log.i(Constants.LOG_TAG, "Up-to-date");
+                        Log.i(LOG_TAG, "Up-to-date");
                         mRomInfo.setSummary(R.string.ota_upto_date);
                         mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
+                        getPreferenceScreen().findPreference(KEY_UPDATE_LINK).setEnabled(false);
+                        mUpdateLink.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                            @Override
+                            public boolean onPreferenceClick(Preference preference) {return false;}});
                     }
                 }
             } else {
                 Toast.makeText(MainActivity.this, "Null", Toast.LENGTH_LONG).show();
-                Log.i(Constants.LOG_TAG, "Up-to-date");
+                Log.i(LOG_TAG, "Up-to-date");
                 mRomInfo.setSummary(R.string.ota_upto_date);
                 mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
+                getPreferenceScreen().findPreference(KEY_UPDATE_LINK).setEnabled(false);
+                mUpdateLink.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {return false;}});
+
             }
         }
     };
