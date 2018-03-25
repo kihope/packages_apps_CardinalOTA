@@ -2,10 +2,12 @@ package com.cardinal.ota;
 
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -21,6 +23,7 @@ import android.preference.PreferenceActivity;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -39,7 +42,7 @@ import static com.cardinal.ota.Utils.getCurBuildDate;
 import static com.cardinal.ota.Utils.getProp;
 
 public class MainActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener,
-        SharedPreferences.OnSharedPreferenceChangeListener, FetchTask.AsyncResponse {
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     public String device, name, currentVer;
     private static final String KEY_ROM_INFO = "rom_info";
@@ -97,6 +100,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
             mRomInfo.setSummary(R.string.ota_upto_date);
             updatePreferences();
         } else updatePreferences();
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mMessageReceiver, new IntentFilter("ROMUpdates"));
     }
 
     private void updatePreferences() {
@@ -158,7 +162,8 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                 .build();
         Log.i(Constants.LOG_TAG, ctrBaseUrl.toString());
         dialog.show();
-        new FetchTask(this).execute(ctrBaseUrl.toString());
+        Intent intent = new Intent(this, FetchService.class);
+        startService(new Intent(this, FetchService.class));
 
     }
 
@@ -172,75 +177,80 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         return false;
     }
 
-    @Override
-    public void processFinish(String output, int date) {
-        dialog.dismiss();
-        Log.i(Constants.LOG_TAG, "processFinish");
-        if (!output.equalsIgnoreCase(null) && date != 0) {
-            name = output;
-            currentVer = getProp(Constants.BUILD_FLAVOR_PROP);
-            if ((isConnected()) && (!output.equalsIgnoreCase(""))) {
-                if (compareDate(date, getCurBuildDate(currentVer))) {
-                    Log.i(Constants.LOG_TAG, "Not up-to-date");
-                    mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
-                    mRomInfo.setSummary(R.string.ota_update_available);
-                    mUpdateLink = (Preference) getPreferenceScreen().findPreference(KEY_UPDATE_LINK);
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            dialog.dismiss();
+            String output; int date;
+            output = intent.getStringExtra("Update");
+            date = Integer.parseInt(intent.getStringExtra("BuildDate"));
+            if (!output.equalsIgnoreCase(null) && date != 0) {
+                name = output;
+                currentVer = getProp(Constants.BUILD_FLAVOR_PROP);
+                if ((isConnected()) && (!output.equalsIgnoreCase(""))) {
+                    if (compareDate(date, getCurBuildDate(currentVer))) {
+                        Log.i(Constants.LOG_TAG, "Not up-to-date");
+                        mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
+                        mRomInfo.setSummary(R.string.ota_update_available);
+                        mUpdateLink = (Preference) getPreferenceScreen().findPreference(KEY_UPDATE_LINK);
 
-                    final Uri uri = Uri.parse(Constants.SF_PROJECTS_DOWNLOAD_BASE_URL)
-                            .buildUpon()
-                            .appendPath(Constants.ROM_NAME)
-                            .appendPath(device)
-                            .appendPath(name)
-                            .build();
-                    downUri = uri.toString();
+                        final Uri uri = Uri.parse(Constants.SF_PROJECTS_DOWNLOAD_BASE_URL)
+                                .buildUpon()
+                                .appendPath(Constants.ROM_NAME)
+                                .appendPath(device)
+                                .appendPath(name)
+                                .build();
+                        downUri = uri.toString();
 
-                    final ListView lv = getListView();
-                    lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                        @Override
-                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                            Log.i(Constants.LOG_TAG, Long.toString(id));
-                            switch ((int) id) {
-                                case 3:
-                                    registerForContextMenu(lv);
-                                    break;
+                        final ListView lv = getListView();
+                        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                            @Override
+                            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                                Log.i(Constants.LOG_TAG, Long.toString(id));
+                                switch ((int) id) {
+                                    case 3:
+                                        registerForContextMenu(lv);
+                                        break;
+                                }
+                                return false;
                             }
-                            return false;
-                        }
-                    });
+                        });
 
-                    mUpdateLink.setIcon(R.drawable.ic_ota_download);
-                    mUpdateLink.setTitle(R.string.ota_download_title);
-                    mUpdateLink.setSummary(R.string.ota_download_summary);
-                    mUpdateLink.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference preference) {
+                        mUpdateLink.setIcon(R.drawable.ic_ota_download);
+                        mUpdateLink.setTitle(R.string.ota_download_title);
+                        mUpdateLink.setSummary(R.string.ota_download_summary);
+                        mUpdateLink.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                            @Override
+                            public boolean onPreferenceClick(Preference preference) {
 
-                            DownloadManager.Request r = new DownloadManager.Request(uri);
-                            r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name);
-                            r.allowScanningByMediaScanner();
-                            r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (checkPermission())
-                                    dm.enqueue(r);
-                                else requestPermission();
-                            } else dm.enqueue(r);
-                            return false;
-                        }
-                    });
-                } else {
-                    Log.i(Constants.LOG_TAG, "Up-to-date");
-                    mRomInfo.setSummary(R.string.ota_upto_date);
-                    mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
+                                DownloadManager.Request r = new DownloadManager.Request(uri);
+                                r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name);
+                                r.allowScanningByMediaScanner();
+                                r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    if (checkPermission())
+                                        dm.enqueue(r);
+                                    else requestPermission();
+                                } else dm.enqueue(r);
+                                return false;
+                            }
+                        });
+                    } else {
+                        Log.i(Constants.LOG_TAG, "Up-to-date");
+                        mRomInfo.setSummary(R.string.ota_upto_date);
+                        mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
+                    }
                 }
+            } else {
+                Toast.makeText(MainActivity.this, "Null", Toast.LENGTH_LONG).show();
+                Log.i(Constants.LOG_TAG, "Up-to-date");
+                mRomInfo.setSummary(R.string.ota_upto_date);
+                mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
             }
-        } else {
-            Toast.makeText(MainActivity.this, "Null", Toast.LENGTH_LONG).show();
-            Log.i(Constants.LOG_TAG, "Up-to-date");
-            mRomInfo.setSummary(R.string.ota_upto_date);
-            mCheckUpdate.setSummary(getString(R.string.ota_last_checked) + " " + DateFormat.getDateTimeInstance().format(new Date()));
         }
-    }
+    };
+
 
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);

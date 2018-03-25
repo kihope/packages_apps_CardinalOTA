@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/someota.iml" filepath="$PROJECT_DIR$/someota.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages_apps_CardinalOTA.iml" filepath="$PROJECT_DIR$/packages_apps_CardinalOTA.iml" />
     </modules>
   </component>
 </project>
