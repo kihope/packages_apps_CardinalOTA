@@ -11,4 +11,6 @@
     <string name="ota_update_available">Latest build is available for update</string>
     <string name="ota_download_title">Download</string>
     <string name="ota_download_summary">Long Press for more options</string>
+    <string name="set">Set</string>
+    <string name="cancel">Cancel</string>
 </resources>

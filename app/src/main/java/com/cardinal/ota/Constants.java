@@ -8,6 +8,5 @@ class Constants {
     final static String SF_PROJECTS_DOWNLOAD_BASE_URL = "https://downloads.sourceforge.net/project";
     final static String ROM_NAME = "cardinal-aosp";
     final static String ROM_ZIP_DELIMITER = ".-";
-    final static int ROM_ZIP_DATE_LOCATION = 8;
     final static String ROM_ZIP_NAME = "Cardinal-AOSP";
 }

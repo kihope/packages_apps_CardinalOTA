@@ -4,8 +4,8 @@
 
     <Preference
         android:key="rom_info"
-        android:singleLineTitle="false"
-        android:layout="@layout/preference_material_settings" />
+        android:layout="@layout/preference_material_settings"
+        android:singleLineTitle="false" />
 
     <Preference
         android:key="check_update"
@@ -14,6 +14,10 @@
 
     <Preference
         android:key="update_link"
+        android:layout="@layout/preference_material_settings" />
+
+    <com.cardinal.ota.TimePreference
+        android:key="schedule_pref"
         android:layout="@layout/preference_material_settings" />
 
 </PreferenceScreen>

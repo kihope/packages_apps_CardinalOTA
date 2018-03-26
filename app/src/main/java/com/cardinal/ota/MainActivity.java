@@ -1,6 +1,7 @@
 package com.cardinal.ota;
 
 import android.app.DownloadManager;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -48,9 +49,11 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
     private static final String KEY_ROM_INFO = "rom_info";
     private static final String KEY_CHECK_UPDATE = "check_update";
     private static final String KEY_UPDATE_LINK = "update_link";
+    private static final String KEY_SCHEDULE_PREF = "schedule_pref";
     private Preference mRomInfo;
     private Preference mCheckUpdate;
     private Preference mUpdateLink;
+    private TimePreference mScheduleUpdate;
     private ProgressDialog dialog;
     private static final int PERMISSION_REQUEST_CODE = 200;
     private String downUri;
@@ -71,8 +74,14 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         addPreferencesFromResource(R.xml.preference_cardinal_ota);
         mRomInfo = (Preference) getPreferenceScreen().findPreference(KEY_ROM_INFO);
         mCheckUpdate = (Preference) getPreferenceScreen().findPreference(KEY_CHECK_UPDATE);
+        mScheduleUpdate = (TimePreference) getPreferenceScreen().findPreference(KEY_SCHEDULE_PREF);
         mRomInfo.setIcon(R.drawable.ic_ota_info);
         mCheckUpdate.setIcon(R.drawable.ic_ota_refresh);
+        mScheduleUpdate.setTitle("Schedule Check for Updates");
+        mScheduleUpdate.setIcon(R.drawable.ic_ota_schedule);
+        if (mScheduleUpdate.getSummary() == null)
+            mScheduleUpdate.setSummary("12:00");
+        mScheduleUpdate.setDefaultValue("12:00");
 
         mUpdateLink = (Preference) getPreferenceScreen().findPreference(KEY_UPDATE_LINK);
         mUpdateLink.setIcon(R.drawable.ic_ota_download);
@@ -167,13 +176,14 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                 .build();
         Log.i(LOG_TAG, ctrBaseUrl.toString());
         dialog.show();
-        startService(new Intent(this, FetchService.class));
-
+        stopService(new Intent(this, FetchService.class));
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(1);
+        startForegroundService(new Intent(this, FetchService.class));
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-
     }
 
     @Override
@@ -186,7 +196,8 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         public void onReceive(Context context, Intent intent) {
             dialog.dismiss();
             stopService(new Intent(getApplicationContext(), FetchService.class));
-            String output; int date;
+            String output;
+            int date;
             output = intent.getStringExtra("Update");
             date = Integer.parseInt(intent.getStringExtra("BuildDate"));
             if (!output.equalsIgnoreCase(null) && date != 0) {
@@ -211,7 +222,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                             @Override
                             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                                Log.i(LOG_TAG, Long.toString(id));
+                                //Log.i(LOG_TAG, Long.toString(id));
                                 switch ((int) id) {
                                     case 3:
                                         registerForContextMenu(lv);
@@ -244,7 +255,10 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                         getPreferenceScreen().findPreference(KEY_UPDATE_LINK).setEnabled(false);
                         mUpdateLink.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                             @Override
-                            public boolean onPreferenceClick(Preference preference) {return false;}});
+                            public boolean onPreferenceClick(Preference preference) {
+                                return false;
+                            }
+                        });
                     }
                 }
             } else {
@@ -255,12 +269,14 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                 getPreferenceScreen().findPreference(KEY_UPDATE_LINK).setEnabled(false);
                 mUpdateLink.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
-                    public boolean onPreferenceClick(Preference preference) {return false;}});
+                    public boolean onPreferenceClick(Preference preference) {
+                        return false;
+                    }
+                });
 
             }
         }
     };
-
 
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);

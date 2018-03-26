@@ -1,5 +1,6 @@
 package com.cardinal.ota;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -42,6 +43,15 @@ public class FetchService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.i(LOG_TAG, "Fetch Service Start");
+
+        String CHANNEL_ID = "id";
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Cardinal-AOSP", NotificationManager.IMPORTANCE_DEFAULT);
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("")
+                .setContentText("").build();
+        startForeground(1, notification);
+
         String checkDevice = getProp(Constants.ROM_DEVICE_PROP);
         if (!checkDevice.equalsIgnoreCase("")) device = checkDevice;
         Uri ctrBaseUrl = Uri.parse(Constants.SF_PROJECTS_BASE_URL)
@@ -132,7 +142,6 @@ public class FetchService extends Service {
                         String value = st.nextToken();
                         if (isValidDate(value)) {
                             date = Integer.parseInt(value);
-                            //Log.e(LOG_TAG, value);
                         }
 
                         if (date == 0)
@@ -160,8 +169,9 @@ public class FetchService extends Service {
                 intent.putExtra("Update", newestRom);
                 intent.putExtra("BuildDate", Integer.toString(maxDate));
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                stopForeground(true);
                 NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.cancelAll();
+                notificationManager.cancel(1);
                 if (!newestRom.equalsIgnoreCase(null) && maxDate != 0) {
                     String currentVer = getProp(Constants.BUILD_FLAVOR_PROP);
                     if ((isConnected()) && (!newestRom.equalsIgnoreCase(""))) {
@@ -180,14 +190,15 @@ public class FetchService extends Service {
                             Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
                             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 123, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
                             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), "id")
-                                    .setSmallIcon(R.mipmap.ic_launcher_ota)
-                                    .setBadgeIconType(R.mipmap.ic_launcher_ota)
+                                    .setSmallIcon(R.drawable.ic_ota_download)
+                                    .setBadgeIconType(R.drawable.ic_ota_download)
                                     .setContentTitle("Cardinal-AOSP Update Available")
                                     .setAutoCancel(true).setContentIntent(pendingIntent)
                                     .setNumber(1)
                                     .setColor(255)
                                     .setContentText("Tap here to open OTA app")
                                     .setWhen(System.currentTimeMillis());
+
                             notificationManager.notify(1, notificationBuilder.build());
                         }
                     }
@@ -199,6 +210,7 @@ public class FetchService extends Service {
                 intent.putExtra("BuildDate", "0");
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             }
+
         }
 
 
