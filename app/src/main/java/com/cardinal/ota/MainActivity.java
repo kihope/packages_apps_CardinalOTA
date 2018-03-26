@@ -79,6 +79,8 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         mCheckUpdate.setIcon(R.drawable.ic_ota_refresh);
         mScheduleUpdate.setTitle("Schedule Check for Updates");
         mScheduleUpdate.setIcon(R.drawable.ic_ota_schedule);
+        if (mScheduleUpdate.getSummary()==null)
+        mScheduleUpdate.setSummary("12:00");
         mScheduleUpdate.setDefaultValue("12:00");
 
         mUpdateLink = (Preference) getPreferenceScreen().findPreference(KEY_UPDATE_LINK);
