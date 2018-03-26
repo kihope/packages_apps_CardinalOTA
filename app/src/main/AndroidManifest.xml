@@ -24,6 +24,9 @@
         </activity>
 
         <service android:name=".FetchService" />
+
+        <receiver android:name=".ScheduleReceiver" />
+
     </application>
 
 </manifest>

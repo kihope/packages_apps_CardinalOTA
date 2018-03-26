@@ -1,7 +1,15 @@
 package com.cardinal.ota;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
 
@@ -49,5 +57,18 @@ public class Utils {
             if (date != 0) break;
         }
         return date;
+    }
+
+    public static void scheduleFetchUpdate(Context context){
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, ScheduleReceiver.class);
+        PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        Calendar cal= Calendar.getInstance();
+        SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(context);
+        String time=prefs.getString("schedule_pref", "12:00");
+        cal.set(Calendar.HOUR_OF_DAY, TimePreference.getHour(time));
+        cal.set(Calendar.MINUTE, TimePreference.getMinute(time));
+        cal.set(Calendar.SECOND, 0);
+        alarmMgr.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pIntent);
     }
 }
