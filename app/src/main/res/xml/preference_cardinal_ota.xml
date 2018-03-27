@@ -4,8 +4,8 @@
 
     <Preference
         android:key="rom_info"
-        android:singleLineTitle="false"
-        android:layout="@layout/preference_material_settings" />
+        android:layout="@layout/preference_material_settings"
+        android:singleLineTitle="false" />
 
     <Preference
         android:key="check_update"

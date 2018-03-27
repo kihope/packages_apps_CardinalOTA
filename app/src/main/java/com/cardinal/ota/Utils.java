@@ -59,16 +59,28 @@ public class Utils {
         return date;
     }
 
-    public static void scheduleFetchUpdate(Context context){
+    public static void scheduleFetchUpdate(Context context) {
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, ScheduleReceiver.class);
         PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-        Calendar cal= Calendar.getInstance();
-        SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(context);
-        String time=prefs.getString("schedule_pref", "12:00");
+        Calendar cal = Calendar.getInstance();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String time = prefs.getString("schedule_pref", "12:00");
         cal.set(Calendar.HOUR_OF_DAY, TimePreference.getHour(time));
         cal.set(Calendar.MINUTE, TimePreference.getMinute(time));
         cal.set(Calendar.SECOND, 0);
         alarmMgr.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pIntent);
+    }
+
+    public static String formatTime(String time) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+        try {
+            Date date = dateFormat.parse(time);
+            String res = dateFormat.format(date);
+            return res;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

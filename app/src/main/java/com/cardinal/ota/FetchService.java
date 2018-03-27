@@ -17,7 +17,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.htmlparser.Parser;
 import org.htmlparser.filters.NodeClassFilter;
@@ -44,7 +43,6 @@ public class FetchService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.i(LOG_TAG, "Fetch Service Start");
-        Toast.makeText(getApplicationContext(), "Start Service", Toast.LENGTH_LONG).show();
 
         String CHANNEL_ID = "id";
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Cardinal-AOSP", NotificationManager.IMPORTANCE_DEFAULT);
@@ -144,7 +142,6 @@ public class FetchService extends Service {
                         String value = st.nextToken();
                         if (isValidDate(value)) {
                             date = Integer.parseInt(value);
-                            //Log.e(LOG_TAG, value);
                         }
 
                         if (date == 0)
@@ -203,7 +200,6 @@ public class FetchService extends Service {
                                     .setWhen(System.currentTimeMillis());
 
                             notificationManager.notify(1, notificationBuilder.build());
-                            //startForeground(1, notificationBuilder.build());
                         }
                     }
                 }

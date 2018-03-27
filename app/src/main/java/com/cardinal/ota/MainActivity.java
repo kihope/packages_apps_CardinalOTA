@@ -79,8 +79,8 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         mCheckUpdate.setIcon(R.drawable.ic_ota_refresh);
         mScheduleUpdate.setTitle("Schedule Check for Updates");
         mScheduleUpdate.setIcon(R.drawable.ic_ota_schedule);
-        if (mScheduleUpdate.getSummary()==null)
-        mScheduleUpdate.setSummary("12:00");
+        if (mScheduleUpdate.getSummary() == null)
+            mScheduleUpdate.setSummary("12:00");
         mScheduleUpdate.setDefaultValue("12:00");
 
         mUpdateLink = (Preference) getPreferenceScreen().findPreference(KEY_UPDATE_LINK);
@@ -115,9 +115,6 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
             updatePreferences();
         } else updatePreferences();
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mMessageReceiver, new IntentFilter("ROMUpdates"));
-        //Log.i(LOG_TAG,(mScheduleUpdate.getSummary()).toString());
-
-        //Utils.scheduleFetchUpdate(getApplicationContext());
     }
 
     private void updatePreferences() {
@@ -199,7 +196,8 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         public void onReceive(Context context, Intent intent) {
             dialog.dismiss();
             stopService(new Intent(getApplicationContext(), FetchService.class));
-            String output; int date;
+            String output;
+            int date;
             output = intent.getStringExtra("Update");
             date = Integer.parseInt(intent.getStringExtra("BuildDate"));
             if (!output.equalsIgnoreCase(null) && date != 0) {
@@ -257,7 +255,10 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                         getPreferenceScreen().findPreference(KEY_UPDATE_LINK).setEnabled(false);
                         mUpdateLink.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                             @Override
-                            public boolean onPreferenceClick(Preference preference) {return false;}});
+                            public boolean onPreferenceClick(Preference preference) {
+                                return false;
+                            }
+                        });
                     }
                 }
             } else {
@@ -268,7 +269,10 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                 getPreferenceScreen().findPreference(KEY_UPDATE_LINK).setEnabled(false);
                 mUpdateLink.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
-                    public boolean onPreferenceClick(Preference preference) {return false;}});
+                    public boolean onPreferenceClick(Preference preference) {
+                        return false;
+                    }
+                });
 
             }
         }
