@@ -22,7 +22,6 @@ import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -117,6 +116,12 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mMessageReceiver, new IntentFilter("ROMUpdates"));
     }
 
+    @Override
+    public boolean onNavigateUp(){
+        finish();
+        return true;
+    }
+
     private void updatePreferences() {
         updateRomInfo();
         if (isConnected())
@@ -125,11 +130,6 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
