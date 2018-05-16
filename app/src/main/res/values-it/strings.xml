@@ -13,4 +13,6 @@
   <string name="ota_update_available">L\'ultima build è disponibile per l\'aggiornamento</string>
   <string name="ota_download_title">Download</string>
   <string name="ota_download_summary">Tieni premuto per altre opzioni</string>
+  <string name="set">Imposta</string>
+  <string name="cancel">Annulla</string>
 </resources>

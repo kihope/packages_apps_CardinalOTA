@@ -13,4 +13,6 @@
   <string name="ota_update_available">Pro aktualizaci je k dispozici nejnovější sestavení</string>
   <string name="ota_download_title">Stáhnout</string>
   <string name="ota_download_summary">Dlouze stisknout pro více možností</string>
+  <string name="set">Nastavit</string>
+  <string name="cancel">Zrušit</string>
 </resources>

@@ -12,5 +12,7 @@
   <string name="ota_network_error">Ağ hatası</string>
   <string name="ota_update_available">En son yapı güncelleme için kullanılabilir</string>
   <string name="ota_download_title">İndir</string>
-  <string name="ota_download_summary">Daha fazla seçenek için uzun basın</string>
+  <string name="ota_download_summary">Daha fazla seçenek için uzun dokunun</string>
+  <string name="set">Ayarla</string>
+  <string name="cancel">İptal</string>
 </resources>

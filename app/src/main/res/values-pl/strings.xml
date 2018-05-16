@@ -13,4 +13,6 @@
   <string name="ota_update_available">Najnowsza aktualizacja</string>
   <string name="ota_download_title">Pobierz</string>
   <string name="ota_download_summary">Przytrzymaj, aby uzyskać więcej opcji</string>
+  <string name="set">Ustaw</string>
+  <string name="cancel">Anuluj</string>
 </resources>
