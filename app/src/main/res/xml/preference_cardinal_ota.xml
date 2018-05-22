@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/app_name">
+    
+    <PreferenceScreen
+        android:enabled="false"
+        android:layout="@layout/banner_layout"
+        android:selectable="false"
+        android:key="banner" />
 
     <Preference
         android:key="rom_info"
