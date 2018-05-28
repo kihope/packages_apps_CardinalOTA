@@ -1,4 +1,4 @@
-package com.cardinal.ota;
+package com.revenge.ota;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

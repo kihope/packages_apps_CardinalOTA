@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_PACKAGE_NAME := CardinalOTA
+LOCAL_PACKAGE_NAME := RevengeOTA
 LOCAL_MODULE_TAGS := optional
 LOCAL_CERTIFICATE := platform
 LOCAL_MANIFEST_FILE := app/src/main/AndroidManifest.xml

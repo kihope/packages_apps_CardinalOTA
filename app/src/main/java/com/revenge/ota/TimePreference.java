@@ -1,4 +1,4 @@
-package com.cardinal.ota;
+package com.revenge.ota;
 
 import android.content.Context;
 import android.content.res.TypedArray;

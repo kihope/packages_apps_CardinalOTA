@@ -1,4 +1,4 @@
-package com.cardinal.ota;
+package com.revenge.ota;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

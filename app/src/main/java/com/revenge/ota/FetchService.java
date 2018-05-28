@@ -1,4 +1,4 @@
-package com.cardinal.ota;
+package com.revenge.ota;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -29,10 +29,10 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.cardinal.ota.Utils.compareDate;
-import static com.cardinal.ota.Utils.getCurBuildDate;
-import static com.cardinal.ota.Utils.getProp;
-import static com.cardinal.ota.Utils.isValidDate;
+import static com.revenge.ota.Utils.compareDate;
+import static com.revenge.ota.Utils.getCurBuildDate;
+import static com.revenge.ota.Utils.getProp;
+import static com.revenge.ota.Utils.isValidDate;
 
 public class FetchService extends Service {
 
@@ -45,7 +45,7 @@ public class FetchService extends Service {
         Log.i(LOG_TAG, "Fetch Service Start");
 
         String CHANNEL_ID = "id";
-        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Cardinal-AOSP", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Revenge-OS", NotificationManager.IMPORTANCE_DEFAULT);
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("")
@@ -179,8 +179,8 @@ public class FetchService extends Service {
                             Log.i(LOG_TAG, "Not up-to-date");
 
                             String id = "id";
-                            CharSequence name = "Cardinal-AOSP";
-                            String description = "Notifications regarding Cardinal-AOSP updates";
+                            CharSequence name = "Revenge-OS";
+                            String description = "Notifications regarding Revenge-OS updates";
                             int importance = NotificationManager.IMPORTANCE_HIGH;
                             NotificationChannel mChannel = new NotificationChannel(id, name, importance);
                             mChannel.setDescription(description);
@@ -192,7 +192,7 @@ public class FetchService extends Service {
                             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), "id")
                                     .setSmallIcon(R.drawable.ic_ota_download)
                                     .setBadgeIconType(R.drawable.ic_ota_download)
-                                    .setContentTitle("Cardinal-AOSP Update Available")
+                                    .setContentTitle("Revenge-OS Update Available")
                                     .setAutoCancel(true).setContentIntent(pendingIntent)
                                     .setNumber(1)
                                     .setColor(255)

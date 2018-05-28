@@ -1,4 +1,4 @@
-package com.cardinal.ota;
+package com.revenge.ota;
 
 import android.app.DownloadManager;
 import android.app.NotificationManager;
@@ -37,9 +37,9 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.cardinal.ota.Utils.compareDate;
-import static com.cardinal.ota.Utils.getCurBuildDate;
-import static com.cardinal.ota.Utils.getProp;
+import static com.revenge.ota.Utils.compareDate;
+import static com.revenge.ota.Utils.getCurBuildDate;
+import static com.revenge.ota.Utils.getProp;
 
 public class MainActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -70,7 +70,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
 
         dialog = ProgressDialog.show(MainActivity.this, "", getString(R.string.ota_dialog_message), true);
 
-        addPreferencesFromResource(R.xml.preference_cardinal_ota);
+        addPreferencesFromResource(R.xml.preference_revenge_ota);
         mRomInfo = (Preference) getPreferenceScreen().findPreference(KEY_ROM_INFO);
         mCheckUpdate = (Preference) getPreferenceScreen().findPreference(KEY_CHECK_UPDATE);
         mScheduleUpdate = (TimePreference) getPreferenceScreen().findPreference(KEY_SCHEDULE_PREF);
